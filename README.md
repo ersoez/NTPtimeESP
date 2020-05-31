@@ -1,5 +1,8 @@
 # NTPtimeESP
 
+This is a german version with a datime print like: 
+15:45:55  31.5.2020  Tag: 1  Unixtime: 1590930355
+
 This library returns the queries the NTP time service and returns the actual time in a structure:
 
 ```
