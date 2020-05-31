@@ -4,6 +4,7 @@ This routine gets the unixtime from a NTP server and adjusts it to the time zone
 Middle European summer time if requested
 
 Author: Andreas Spiess V1.0 2016-5-28
+German Version, printDateTime gives: 15:5:55  31.5.2020  Tag: 1  Unixtime: 1590930355
 
 Based on work from John Lassen: http://www.john-lassen.de/index.php/projects/esp-8266-arduino-ide-webconfig
 
@@ -23,7 +24,7 @@ Based on work from John Lassen: http://www.john-lassen.de/index.php/projects/esp
 const int NTP_PACKET_SIZE = 48;
 byte _packetBuffer[ NTP_PACKET_SIZE];
 static const uint8_t _monthDays[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
+unsigned long _unixTime = 0;
 float _timeZone=0.0;
 String _NTPserver="";
 
@@ -59,21 +60,25 @@ NTPtime::NTPtime(String NTPserver) {
 
 void NTPtime::printDateTime(strDateTime _dateTime) {
 	if (_dateTime.valid) {
-		Serial.print(_dateTime.year);
-		Serial.print( "-");
-		Serial.print(_dateTime.month);
-		Serial.print( "-");
-		Serial.print(_dateTime.day);
-		Serial.print( "-");
-		Serial.print(_dateTime.dayofWeek);
-		Serial.print( " ");
-
 		Serial.print(_dateTime.hour);
-		Serial.print( "H ");
+		Serial.print( ":");
 		Serial.print(_dateTime.minute);
-		Serial.print( "M ");
+		Serial.print( ":");
 		Serial.print(_dateTime.second);
-		Serial.print( "S ");
+		Serial.print( "  ");
+		
+		Serial.print(_dateTime.day);
+		Serial.print( ".");
+		Serial.print(_dateTime.month);
+		Serial.print( ".");
+		Serial.print(_dateTime.year);
+		Serial.print( "  Tag: ");
+		
+		Serial.print(_dateTime.dayofWeek);
+		
+		Serial.print( "  Unixtime: ");
+		Serial.print(_unixTime);
+				
 		Serial.println();
 	} else {
 #ifdef DEBUG_ON
@@ -222,7 +227,7 @@ unsigned long NTPtime::adjustTimeZone(unsigned long _timeStamp, float _timeZone,
 strDateTime NTPtime::getNTPtime(float _timeZone, int _DayLightSaving) {
 	int cb;
 	strDateTime _dateTime;
-	unsigned long _unixTime = 0;
+	
 	_dateTime.valid = false;
 	unsigned long _currentTimeStamp;
 
